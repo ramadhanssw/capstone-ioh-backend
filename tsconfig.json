@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "allowJs": false,
+    "strict": true,
+    "isolatedModules": true,
+    "esModuleInterop": true,
+    "inlineSourceMap": true,
+    "outDir": "dist/"
+  },
+  "include": ["src/**/*.ts",],
+}

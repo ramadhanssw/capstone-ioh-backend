@@ -1,0 +1,3 @@
+dist/
+yarn.lock
+firebase-adminsdk.json
