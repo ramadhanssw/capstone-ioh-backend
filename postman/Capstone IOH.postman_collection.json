@@ -92,12 +92,10 @@
 							]
 						},
 						"url": {
-							"raw": "http://localhost:{{port}}{{urlPrefix}}/user",
-							"protocol": "http",
+							"raw": "{{url}}{{urlPrefix}}/user",
 							"host": [
-								"localhost"
+								"{{url}}{{urlPrefix}}"
 							],
-							"port": "{{port}}{{urlPrefix}}",
 							"path": [
 								"user"
 							]
@@ -255,12 +253,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:{{port}}{{urlPrefix}}/user",
-							"protocol": "http",
+							"raw": "{{url}}{{urlPrefix}}/user",
 							"host": [
-								"localhost"
+								"{{url}}{{urlPrefix}}"
 							],
-							"port": "{{port}}{{urlPrefix}}",
 							"path": [
 								"user"
 							]
@@ -389,12 +385,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:{{port}}{{urlPrefix}}/user/Wd5uCpzCF8JnclEJ0zhP",
-							"protocol": "http",
+							"raw": "{{url}}{{urlPrefix}}/user/Wd5uCpzCF8JnclEJ0zhP",
 							"host": [
-								"localhost"
+								"{{url}}{{urlPrefix}}"
 							],
-							"port": "{{port}}{{urlPrefix}}",
 							"path": [
 								"user",
 								"Wd5uCpzCF8JnclEJ0zhP"
@@ -552,12 +546,10 @@
 							]
 						},
 						"url": {
-							"raw": "http://localhost:{{port}}/auth",
-							"protocol": "http",
+							"raw": "{{url}}/auth",
 							"host": [
-								"localhost"
+								"{{url}}"
 							],
-							"port": "{{port}}",
 							"path": [
 								"auth"
 							]
