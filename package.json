@@ -45,8 +45,11 @@
     "start": "node dist/server.js",
     "postinstall": "tsc",
     "watch-node": "nodemon dist/server.js",
-    "build": "tsc",
     "watch-ts": "tsc -w",
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "serve": "node dist/server.js",
+    "test": "jest",
     "deploy": "git add . && git commit -m Heroku && git push heroku master"
   },
   "dependencies": {

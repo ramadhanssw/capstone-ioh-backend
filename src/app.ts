@@ -10,20 +10,16 @@ import firebase from 'firebase-admin'
 import fs from "fs"
 import helmet from 'helmet'
 import path from 'path'
-import AuthController, { MSAuth } from './actions/AuthController'
+import AuthController from './actions/AuthController'
 import { APIResponse } from './interfaces/response'
 import {
   Authentication,
   CORS,
-  IsAdmin,
-  IsReviewer,
-  IsStaff,
+  IsAdmin
 } from './middleware'
-import RedisCacheClient from './redis-client'
 import AdminRouter from './routes/AdminRouter'
-import StaffRouter from './routes/StaffRouter'
 import MainRouter from './routes/MainRouter'
-import ReviewerRouter from './routes/ReviewerRouter'
+import UserRouter from './routes/UserRouter'
 
 dotenv.config()
 
@@ -32,7 +28,6 @@ const app = express()
 
 if (MODE === 'development') {
   app.use((req: Request, res: Response, next: NextFunction) => {
-    RedisCacheClient.flushall()
     next()
   })
 }
@@ -49,12 +44,10 @@ app.use((req, res, next) => {
   next()
 })
 
-app.post('/msauth', MSAuth)
 app.post('/auth', AuthController)
 
 app.use('/admin', Authentication, IsAdmin, AdminRouter)
-app.use('/reviewer', Authentication, IsReviewer, ReviewerRouter)
-app.use('/staff', Authentication, IsStaff, StaffRouter)
+app.use('/user', Authentication, UserRouter)
 app.use('/', MainRouter)
 
 app.use((req: Request, res: Response): void => {
@@ -70,6 +63,9 @@ if (firebase.apps.length === 0) {
   firebase.initializeApp({
     credential: firebase.credential.cert(JSON.parse(fs.readFileSync(path.join(__dirname, '../firebase-adminsdk.json')).toString()))
   })
+  console.log("Firebase initialization")
 }
+
+export const firestore = firebase.firestore()
 
 export default app

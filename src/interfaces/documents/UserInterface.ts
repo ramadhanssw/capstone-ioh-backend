@@ -1,9 +1,8 @@
-import { Document, Types } from "mongoose"
+import { Document } from "mongoose"
 
 export enum Privilege {
   Admin = 'admin',
-  Staff = 'staff',
-  Reviewer = 'reviewer',
+  User = 'user',
 }
 
 export enum UserStatus {
@@ -12,79 +11,27 @@ export enum UserStatus {
   Banned = 'banned'
 }
 
-export enum Religion {
-  Islam = 'islam',
-  ProtestantChristian = 'protestant_christian',
-  CatholicChristian = 'catholic_christian',
-  Buddha = 'buddha',
-  Hindu = 'hindu',
-  Konghucu = 'konghucu',
-  Other = 'other'
-}
-
 export enum Gender {
   Man = 'man',
-  Woman = 'woman',
-  Other = 'other'
-}
-
-export enum InitialStatus {
-  NewStudent = 'new_student',
-  TransferStudent = 'transfer_student'
-}
-
-export enum EmploymentStatus {
-  PTT = 'PTT',
-  PNS = 'PNS',
-  GTT = 'GTT',
-  CPNS = 'CPNS'
-}
-
-export enum MaritalStatus {
-  Married = 'married',
-  Widow = 'widow',
-  Single = 'single'
-}
-
-export enum StaffPrivilegeAccess {
-  Payment = 'payment',
-  BookLibrary = 'book_library'
+  Woman = 'woman'
 }
 
 export default interface UserInterface extends Document {
+  id: string
   fullname: string
   email: string
   password: string
   photo?: string
   meta: {
-    NIK?: string
-    NPWP?: string
     address?: string
-    gender?: Gender
-    maritalStatus?: MaritalStatus
-    religion?: Religion
-    department?: Types.ObjectId
-    NIP?: string
-    NUPTK?: string
-    NIPD?: string
-    NISN?: string
-    SKHUN?: string
-    employmentStatus?: EmploymentStatus
-    employmentGroup?: string
-    fieldOfStudy?: string
-    actionResearch?: Types.ObjectId
+    gender?: Gender   
     birthDate?: string
     birthPlace?: string
-    parent?: Types.ObjectId
-    initialStatus?: InitialStatus
-    batchYear?: number
-    specialNeeds?: string
-    phone?: Array<string>
-    fcmToken?: Array<string>
-    fcmTopic?: Array<string>
+    phone?: string
+    fcmToken?: string
+    fcmTopic?: string
   }
   privilege: Privilege
-  staffPrivilegeAccess?: Array<StaffPrivilegeAccess>
   updatedAt: Date
   createdAt: Date
   status: UserStatus

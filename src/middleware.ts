@@ -2,11 +2,10 @@ import dotenv from 'dotenv'
 import { NextFunction, Request, Response } from "express"
 import fs from 'fs'
 import JWT from 'jsonwebtoken'
-import { Types } from 'mongoose'
 import path from 'path'
-import { Privilege } from "./interfaces/documents/UserInterface"
+import { firestore } from './app'
+import UserInterface, { Privilege } from "./interfaces/documents/UserInterface"
 import { APIResponse } from "./interfaces/response"
-import User from './schemas/User'
 
 dotenv.config()
 
@@ -46,11 +45,16 @@ export function Authentication(req: Request, res: Response, next: NextFunction) 
       algorithms: ['PS256']
     })
 
-    User.findOne({_id: id}).then(async user => {
-      if (user === null) {
+    firestore.collection('users').doc(id as string).get().then(async userResult => {
+      if (!userResult.exists) {
         res.json(unauthorizedResponse)
         return
       }
+
+      const user = {
+        id: userResult.id,
+        ...userResult.data()
+      } as UserInterface
 
       res.locals.user = user
       next()
@@ -66,7 +70,7 @@ export function Authentication(req: Request, res: Response, next: NextFunction) 
 
 export function IsAdmin({res, next}: {res: Response, next: NextFunction}): void {
   const { user } = res.locals
-  
+    
   if (user.privilege !== Privilege.Admin) {
     res.json(<APIResponse>{
       success: false,
@@ -79,44 +83,13 @@ export function IsAdmin({res, next}: {res: Response, next: NextFunction}): void 
   next()
 }
 
-export function IsStaff({res, next}: {res: Response, next: NextFunction}): void {
+export function IsUser({res, next}: {res: Response, next: NextFunction}): void {
   const { user } = res.locals
 
-  if (user.privilege != Privilege.Staff) {
+  if (user.privilege != Privilege.User) {
     res.json(<APIResponse>{
       success: false,
-      message: 'Only staff that can use this API'
-    })
-
-    return
-  }
-
-  next()
-}
-
-export function IsReviewer({res, next}: {res: Response, next: NextFunction}): void {
-  const { user } = res.locals
-
-  if (user.privilege != Privilege.Reviewer) {
-    res.json(<APIResponse>{
-      success: false,
-      message: 'Only reviewer that can use this API'
-    })
-
-    return
-  }
-
-  next()
-}
-
-export function DepartmentMatch(req: Request, res: Response, next: NextFunction) {
-  const { department } = req.params as Record<string, string>
-  const { user } = res.locals
-
-  if (user.meta.department?.toString() !== department) {
-    res.json(<APIResponse>{
-      success: false,
-      message: 'User not authorized'
+      message: 'Only user that can use this API'
     })
 
     return

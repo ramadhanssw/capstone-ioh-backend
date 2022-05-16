@@ -1,0 +1,653 @@
+{
+	"info": {
+		"_postman_id": "a356ebc8-e3ed-40c4-b9f4-0b6bdf4b89e3",
+		"name": "Capstone IOH",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Add User",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('it should response 201 status code', () => {\r",
+									"    pm.expect(pm.response).to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"pm.test('response Content-Type header should have application/json value', () => {\r",
+									"    pm.expect(pm.response.headers.get('Content-Type')).to.includes('application/json');\r",
+									"}); \r",
+									"\r",
+									"pm.test('response body should an object', () => {\r",
+									"    const responseJson = pm.response.json();\r",
+									"    pm.expect(responseJson).to.be.an('object');\r",
+									"});\r",
+									"\r",
+									"pm.test('response body have correct property and value', () => {\r",
+									"    const responseJson = pm.response.json();\r",
+									"\r",
+									"    pm.expect(responseJson.status).to.equal('success');\r",
+									"    pm.expect(responseJson.data).to.be.an('object');\r",
+									"    pm.expect(responseJson.data.userId).to.be.a('string');\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "fullname",
+									"value": "renaka",
+									"description": "string",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "renakaagusta28@gmail.com",
+									"description": "string",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "secret",
+									"description": "string",
+									"type": "text"
+								},
+								{
+									"key": "status",
+									"value": "active",
+									"description": "string (active/inactive)",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:{{port}}{{urlPrefix}}/user",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "{{port}}{{urlPrefix}}",
+							"path": [
+								"user"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Add User",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "fullname",
+											"value": "renaka",
+											"description": "string",
+											"type": "text"
+										},
+										{
+											"key": "email",
+											"value": "renakaagusta28@gmail.com",
+											"description": "string",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "secret",
+											"description": "string",
+											"type": "text"
+										},
+										{
+											"key": "status",
+											"value": "active",
+											"description": "string (active/inactive)",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost:{{port}}{{urlPrefix}}/user",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "{{port}}{{urlPrefix}}",
+									"path": [
+										"user"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "undefined"
+								},
+								{
+									"key": "Access-Control-Allow-Headers",
+									"value": "authorization"
+								},
+								{
+									"key": "Access-Control-Allow-Methods",
+									"value": "GET,PUT,POST,DELETE,PATCH,OPTIONS"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "0"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "31"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"1f-oO6VJivIcG+hUB8ipvmmO+bNftY\""
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 16 May 2022 03:06:56 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"message\": \"ok\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Get All User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('it should response 200 status code', () => {\r",
+									"    pm.expect(pm.response).to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test('response Content-Type header should have application/json value', () => {\r",
+									"    pm.expect(pm.response.headers.get('Content-Type')).to.includes('application/json');\r",
+									"}); \r",
+									"\r",
+									"pm.test('response body should an object', () => {\r",
+									"    const responseJson = pm.response.json();\r",
+									"    pm.expect(responseJson).to.be.an('object');\r",
+									"});\r",
+									"\r",
+									"pm.test('response body have correct property and value', () => {\r",
+									"    const responseJson = pm.response.json();\r",
+									"\r",
+									"    pm.expect(responseJson.status).to.equal('success');\r",
+									"    pm.expect(responseJson.data).to.be.an('object');\r",
+									"    pm.expect(responseJson.data.songs).to.be.an('array');\r",
+									"    pm.expect(responseJson.data.songs).to.length.least(2);\r",
+									"\r",
+									"    const songs = responseJson.data.songs;\r",
+									"    songs.forEach((song) => {\r",
+									"        pm.expect(Object.keys(song)).to.length(3);\r",
+									"        pm.expect(song.id).to.be.ok;\r",
+									"        pm.expect(song.title).to.be.ok;\r",
+									"        pm.expect(song.performer).to.be.ok;\r",
+									"    });\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:{{port}}{{urlPrefix}}/user",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "{{port}}{{urlPrefix}}",
+							"path": [
+								"user"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get All User",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:{{port}}{{urlPrefix}}/user",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "{{port}}{{urlPrefix}}",
+									"path": [
+										"user"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "undefined"
+								},
+								{
+									"key": "Access-Control-Allow-Headers",
+									"value": "authorization"
+								},
+								{
+									"key": "Access-Control-Allow-Methods",
+									"value": "GET,PUT,POST,DELETE,PATCH,OPTIONS"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "0"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "536"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"218-HSxRtRz6c9VSiy7wW4fIr287QLA\""
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 16 May 2022 03:07:21 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"data\": {\n        \"users\": [\n            {\n                \"id\": \"Wd5uCpzCF8JnclEJ0zhP\",\n                \"updatedAt\": {\n                    \"_seconds\": 1652670415,\n                    \"_nanoseconds\": 86000000\n                },\n                \"email\": \"renakaagusta28@gmail.com\",\n                \"createdAt\": {\n                    \"_seconds\": 1652670415,\n                    \"_nanoseconds\": 86000000\n                },\n                \"privilege\": \"user\",\n                \"status\": \"active\",\n                \"fullname\": \"renaka\",\n                \"password\": \"$2b$10$e5T/xdq9O4Aq2dd5nsfE.OYND9dqcZ53euK5BEovT35iE3UeyLnkq\"\n            },\n            {\n                \"id\": \"rkBLBzCfolFZCLFtoZnX\",\n                \"password\": \"$2b$10$sMPZcRwbvzxflRxSREvr2OLwLwFLfMQXZS3kVWwYZiIRWxU/IbXsW\",\n                \"email\": \"admin@ioh.com\",\n                \"status\": \"active\",\n                \"fullname\": \"Admin\",\n                \"privilege\": \"admin\"\n            }\n        ]\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Get User By Id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('it should response 200 status code', () => {\r",
+									"    pm.expect(pm.response).to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test('response Content-Type header should have application/json value', () => {\r",
+									"    pm.expect(pm.response.headers.get('Content-Type')).to.includes('application/json');\r",
+									"}); \r",
+									"\r",
+									"pm.test('response body should an object', () => {\r",
+									"    const responseJson = pm.response.json();\r",
+									"    pm.expect(responseJson).to.be.an('object');\r",
+									"});\r",
+									"\r",
+									"pm.test('response body have correct property and value', () => {\r",
+									"    const responseJson = pm.response.json();\r",
+									"\r",
+									"    pm.expect(responseJson.status).to.equal('success');\r",
+									"    pm.expect(responseJson.data).to.be.an('object');\r",
+									"    pm.expect(responseJson.data.songs).to.be.an('array');\r",
+									"    pm.expect(responseJson.data.songs).to.length.least(2);\r",
+									"\r",
+									"    const songs = responseJson.data.songs;\r",
+									"    songs.forEach((song) => {\r",
+									"        pm.expect(Object.keys(song)).to.length(3);\r",
+									"        pm.expect(song.id).to.be.ok;\r",
+									"        pm.expect(song.title).to.be.ok;\r",
+									"        pm.expect(song.performer).to.be.ok;\r",
+									"    });\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:{{port}}{{urlPrefix}}/user/Wd5uCpzCF8JnclEJ0zhP",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "{{port}}{{urlPrefix}}",
+							"path": [
+								"user",
+								"Wd5uCpzCF8JnclEJ0zhP"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get User By Id",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:{{port}}{{urlPrefix}}/user/Wd5uCpzCF8JnclEJ0zhP",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "{{port}}{{urlPrefix}}",
+									"path": [
+										"user",
+										"Wd5uCpzCF8JnclEJ0zhP"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "undefined"
+								},
+								{
+									"key": "Access-Control-Allow-Headers",
+									"value": "authorization"
+								},
+								{
+									"key": "Access-Control-Allow-Methods",
+									"value": "GET,PUT,POST,DELETE,PATCH,OPTIONS"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "0"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "348"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"15c-Dsy55LuHohHRRHo45e9oAU25xRs\""
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 16 May 2022 03:09:16 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"data\": {\n        \"user\": {\n            \"id\": \"Wd5uCpzCF8JnclEJ0zhP\",\n            \"fullname\": \"renaka\",\n            \"password\": \"$2b$10$e5T/xdq9O4Aq2dd5nsfE.OYND9dqcZ53euK5BEovT35iE3UeyLnkq\",\n            \"createdAt\": {\n                \"_seconds\": 1652670415,\n                \"_nanoseconds\": 86000000\n            },\n            \"email\": \"renakaagusta28@gmail.com\",\n            \"status\": \"active\",\n            \"updatedAt\": {\n                \"_seconds\": 1652670415,\n                \"_nanoseconds\": 86000000\n            },\n            \"privilege\": \"user\"\n        }\n    }\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Sign In",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const port = pm.environment.get('port');\r",
+									"\r",
+									"const requestParams = {\r",
+									"  url: `http://localhost:${port}/users`,\r",
+									"  method: 'POST',\r",
+									"  header: {\r",
+									"    'Content-Type': 'application/json',\r",
+									"  },\r",
+									"  body: {\r",
+									"    mode: 'raw',\r",
+									"    raw: JSON.stringify({ username: 'dicoding', password: 'secret', fullname: 'Dicoding Indonesia' })\r",
+									"  }\r",
+									"};\r",
+									"pm.sendRequest(requestParams, (_, error) => {\r",
+									"    if (error) {\r",
+									"        console.error(error);\r",
+									"    }\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('it should response 400 status code', () => {\r",
+									"    pm.expect(pm.response).to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test('response Content-Type header should have application/json value', () => {\r",
+									"    pm.expect(pm.response.headers.get('Content-Type')).to.includes('application/json');\r",
+									"}); \r",
+									"\r",
+									"pm.test('response body should an object', () => {\r",
+									"    const responseJson = pm.response.json();\r",
+									"    pm.expect(responseJson).to.be.an('object');\r",
+									"});\r",
+									"\r",
+									"pm.test('Got the token', () => {\r",
+									"    const response = pm.response.json();\r",
+									"    pm.expect(response.data.token).to.exist\r",
+									"    pm.environment.set('token', response.data.token);\r",
+									"    pm.environment.set('urlPrefix', response.data.endpoint);\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "admin@ioh.com",
+									"description": "String",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "admin",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:{{port}}/auth",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "{{port}}",
+							"path": [
+								"auth"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Sign In",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "email",
+											"value": "admin@ioh.com",
+											"description": "String",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "admin",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost:{{port}}/auth",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "{{port}}",
+									"path": [
+										"auth"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "undefined"
+								},
+								{
+									"key": "Access-Control-Allow-Headers",
+									"value": "authorization"
+								},
+								{
+									"key": "Access-Control-Allow-Methods",
+									"value": "GET,PUT,POST,DELETE,PATCH,OPTIONS"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "0"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "773"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"305-K9MHW1iAsxHk/Z7Oy+b/vHzHzAI\""
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 16 May 2022 02:44:08 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"data\": {\n        \"token\": \"eyJhbGciOiJQUzI1NiJ9.dW5kZWZpbmVk.knjKub_WMJkMGBpJShlmaOLbbgl3Biip3ceIlTaIpz2tjGLL8vEPUEuVz2O545tnMiAtBr9sW8ddidesLXy1DSvGhAHy45j-Q2IVGM5xcEemz_tu00bCgVjcHrtp1W5nxwC7OrojeWV0izYZiSnYwPBrA8193YvOenm-8_XD_fd4Xcn4EZS0DcHs0bVrdLhyjfaYbHloWVyLTzJ3Nsli-OVzt9lsrUiPDkSsmQcJPaudpapEOjsn3OY6wR-oq3ZkB78EizB5iwxg26z6uUWwGXPFILnjmB6DzuyKxePuCkhWDKZspf7VdI0Lv-uDPdBwpb7fZx7sGdmMmL5mkceFL5KSMzkg77Yj7UJJKr09wp4cMkMS8DivfUMGH9_iNgWNRYPBNQLmUW1YLrLyE9nJHWwcficzJQZmvSklF5yfpI4TvIL3Ixe17Q0ZIhZCD0UP-EhCYgxR5-CA4ibR47X0ageQcf6gLt72k84YK6QV7usogyK1HivNjaxbE1bHBcj8BBhF6PQ9Hdsla8_vyD1Pbgw85Dx8TSLgTQeZbeAPeB99A7MQJ9MG7SDXK3BS_CKQRLzjkYsoFeLO6Ie9wfrHbmFTIUGMb7Re-FXQYw88Tqn-BjuvWpELa5VAv6x2riL0RQBv4e4zm1GM2omp-a5fVTLYqWSfNVwRrmNPUYULfrk\",\n        \"endpoint\": \"/admin\"\n    }\n}"
+						}
+					]
+				}
+			]
+		}
+	]
+}
