@@ -15,6 +15,5 @@ const submitDepartmentFiles: Array<multer.Field> = [
 const UserRouter = Router()
 
 UserRouter.use('/user', UserRouterChild)
-UserRouter.use('/reviewer', UserRouterChild)
 
 export default UserRouter
