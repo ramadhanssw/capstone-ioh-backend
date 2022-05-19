@@ -1,14 +1,15 @@
 import dotenv from 'dotenv'
 import fs from 'fs'
 import path from 'path'
+import { v4 as uuid } from 'uuid';
+import { storageRef } from '../app';
 
 dotenv.config()
 
-export type StorageProvider = 'local'
-
-const {
-  STORAGE_PROVIDER = 'local'
-} = process.env as { STORAGE_PROVIDER: StorageProvider}
+export enum StorageProvider {
+  Local="local",
+  Firebase="firebase"
+}
 
 async function StoreOnLocal(destinationPath: string, localPath: string): Promise<string> {
   if (!fs.existsSync(localPath)) {
@@ -34,12 +35,39 @@ async function StoreOnLocal(destinationPath: string, localPath: string): Promise
     })
   })
 }
-export async function StoreFile(instance: string | null, destinationPath: string, localPath: string, storageProvider: StorageProvider = STORAGE_PROVIDER): Promise<string> {
-  let storedLocation: string = instance ? `${instance}/${destinationPath}` : destinationPath
+
+async function StoreOnFirebase(destinationPath: string, localPath: string): Promise<string> {
+  if (!fs.existsSync(localPath)) {
+    throw new Error('Local path not exists!')
+  }
+
+  return new Promise<string>(async (resolve, reject)=>{
+    try {
+      const uploadResponse = await storageRef.upload(localPath, {
+        public: true,
+        destination: destinationPath,
+        metadata: {
+          firebaseStorageDownloadTokens: uuid(),
+        }
+      });
+
+      return resolve(uploadResponse[0].metadata.mediaLink)
+    } catch (err) {
+      reject(err)
+    }
+  })
+}
+
+export async function StoreFile( destinationPath: string, localPath: string, storageProvider: StorageProvider = StorageProvider.Local): Promise<string> {
+  let storedLocation: string =destinationPath
   
   switch (storageProvider) {
     case 'local':
       storedLocation = await StoreOnLocal(storedLocation, localPath)
+      break
+    
+    case 'firebase':
+      storedLocation = await StoreOnFirebase(storedLocation, localPath)
       break
 
     default:

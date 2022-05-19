@@ -1,24 +1,31 @@
 import { Router } from "express"
+import multer from "multer"
+import os from 'os'
 import {
   RemoveUser,
   UserData,
   UserList,
   SubmitUser,
-  UserPhoto
+  UserPhoto,
+  UpdateUserData,
+  
 } from "../../actions/main/User"
+
+const upload = multer({
+  dest: os.tmpdir()
+})
 
 const User = Router()
 
 User.post('/:id', SubmitUser)
 User.post('/', SubmitUser)
 
-User.delete('/:id', RemoveUser)
-
 User.get('/photo/:id', UserPhoto)
 User.get('/:id', UserData)
 User.get('/', UserList)
 
-User.get('/photo/:id', UserPhoto)
-User.get('/find', UserList)
+User.put('/:id', upload.single('photo'), UpdateUserData)
+
+User.delete('/:id', RemoveUser)
 
 export const UserRouter = User

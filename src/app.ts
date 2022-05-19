@@ -67,5 +67,7 @@ if (firebase.apps.length === 0) {
 }
 
 export const firestore = firebase.firestore()
+export const storageRef = firebase.storage().bucket(`gs://capstone-ioh.appspot.com`);
+
 
 export default app

@@ -10,13 +10,14 @@ import UserInterface, {
   Privilege, UserStatus
 } from "../../interfaces/documents/UserInterface"
 import { APIResponse } from "../../interfaces/response"
+import { StorageProvider, StoreFile } from '../../modules/Storage'
 
 export function UpdateUserData(req: Request, res: Response): void {
-  const { user } = res.locals
+  const { id } = req.params
   const { fullname, address, password } = req.body
   const photo = req.file
 
-  firestore.collection('users').doc(user._id).get().then(async userResult => {
+  firestore.collection('users').doc(id).get().then(async userResult => {
     if (!userResult.exists) {
       res.json(<APIResponse>{
         success: false,
@@ -46,41 +47,40 @@ export function UpdateUserData(req: Request, res: Response): void {
 
     if (photo !== undefined) {
       const fileName = `profile-pict-${Date.now()}-${sanitize(photo.originalname)}`
-      const dirPath = path.join(__dirname, `../../../public/uploads/${String(userData._id)}`)
+      const dirPath = path.join(__dirname, `../../../public/uploads/${String(userData.id)}`)
 
       const filePath = {
-        local: path.join(dirPath, `/${fileName}`),
-        public: path.join(`/uploads/${String(userData._id)}/${fileName}`)
+        local: photo.path,
+        public: path.join(`/uploads/${String(userData.id)}/${fileName}`)
       }
 
       if (!fs.existsSync(dirPath)) {
         fs.mkdirSync(dirPath)
       }
 
-      sharp(photo.buffer)
-        .resize(200, 200)
-        .toFile(filePath.local)
+      const publicUrl = await StoreFile(filePath.public, filePath.local, StorageProvider.Firebase)
 
-      userData.photo = filePath.public
+      userData.photo = publicUrl
 
-      await userData.save().then((newUserData) => {
+      firestore.collection('users').doc(id).update({
+        ...userData
+      }).then(()=>{
         res.json(<APIResponse<{ user: UserInterface }>>{
           success: true,
-          data: {
-            user: newUserData
-          }
+          message: 'Ok'
         })
+        return
       })
     } else {
-      await userData.save().then((newUserData) => {
+      firestore.collection('users').doc(id).update({
+        ...userData
+      }).then(()=>{
         res.json(<APIResponse<{ user: UserInterface }>>{
           success: true,
-          data: {
-            user: newUserData
-          }
+          message: 'Ok'
         })
+        return
       })
-
     }
   }).catch(err => {
     res.json(<APIResponse>{
@@ -90,6 +90,40 @@ export function UpdateUserData(req: Request, res: Response): void {
     })
   })
 }
+
+
+export function UserPhoto(req: Request, res: Response): void {
+  const { id } = req.params
+
+  firestore.collection('users').doc(id).get().then(userResult => {
+    const user = userResult.data() as UserInterface
+
+    if (user === null) {
+      res.json(<APIResponse>{
+        success: false,
+        message: 'User not found',
+        error: null
+      })
+
+      return
+    }
+
+    let url = "/profile.png"
+
+    if (user.photo) {
+      url = user.photo
+    }
+
+    res.sendFile(path.resolve(__dirname, '../../../public' + url))
+  }).catch(err => {
+    res.json(<APIResponse>{
+      success: false,
+      message: 'Database error',
+      error: (err as Error).message
+    })
+  })
+}
+
 export function UserData(req: Request, res: Response): void {
   const { id } = req.params
 
@@ -122,36 +156,6 @@ export function UserData(req: Request, res: Response): void {
       error: (err as Error).message
     })
   })
-}
-
-export function UserPhoto(req: Request, res: Response): void {
-  /*const { id } = req.params
-
-  User.findOne({ _id: Types.ObjectId(id) }).then(user => {
-    if (user === null) {
-      res.json(<APIResponse>{
-        success: false,
-        message: 'User not found',
-        error: null
-      })
-
-      return
-    }
-
-    let url = "/profile.png"
-
-    if (user.photo) {
-      url = user.photo
-    }
-
-    res.sendFile(path.resolve(__dirname, '../../../public' + url))
-  }).catch(err => {
-    res.json(<APIResponse>{
-      success: false,
-      message: 'Database error',
-      error: (err as Error).message
-    })
-  })*/
 }
 
 export async function SubmitUser(req: Request, res: Response): Promise<void> {
