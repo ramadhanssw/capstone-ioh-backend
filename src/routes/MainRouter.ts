@@ -20,6 +20,7 @@ MainRouter.get('/me', Authentication, (req: Request, res: Response): void => {
     success: true,
     data: res.locals
   })
+  return
 })
 
 MainRouter.get('/', (req: Request, res: Response): void => {
@@ -29,6 +30,7 @@ MainRouter.get('/', (req: Request, res: Response): void => {
       currentTimestamp: new Date()
     }
   })
+  return
 })
 
 export default MainRouter

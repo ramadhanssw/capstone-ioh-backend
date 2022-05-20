@@ -1,10 +1,8 @@
 import BCrypt from 'bcrypt'
 import { Request, Response } from "express"
 import fs from 'fs'
-import { Types } from "mongoose"
 import path from 'path'
 import sanitize from 'sanitize-filename'
-import sharp from 'sharp'
 import { firestore } from '../../app'
 import UserInterface, {
   Privilege, UserStatus
