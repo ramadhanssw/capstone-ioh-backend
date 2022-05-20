@@ -4,17 +4,24 @@ import firebase from 'firebase-admin'
 import fs from 'fs'
 import JWT from 'jsonwebtoken'
 import path from 'path'
+import { OAuth2Client } from 'google-auth-library'
 import UserInterface, { Privilege } from "../interfaces/documents/UserInterface"
 import { APIResponse } from '../interfaces/response'
+import { env } from 'process'
 
 export default async function AuthController(req: Request, res: Response) {
-  const { email, password } = req.body as Record<string, string>
+  const { email, password, googleSignInToken } = req.body as Record<string, string>
 
   const firestore = firebase.firestore()
 
   const accountMissmatch: APIResponse = {
     success: false,
     message: 'Email or password missmatch'
+  }
+
+  const accountNotFound: APIResponse = {
+    success: false,
+    message: 'Account not found'
   }
 
   try {
@@ -30,9 +37,53 @@ export default async function AuthController(req: Request, res: Response) {
       ...userResult.docs[0].data()
     } as UserInterface
 
-    BCrypt.compare(password, user.password, async (err, valid) => {
-      if (!valid) {
-        res.json(accountMissmatch)
+    if (password) {
+      BCrypt.compare(password, user.password, async (err, valid) => {
+        if (!valid) {
+          res.json(accountMissmatch)
+          return
+        }
+
+        const jwt = JWT.sign(String(user.id), fs.readFileSync(path.join(__dirname, '../../private.key')), <JWT.SignOptions>{
+          algorithm: 'PS256'
+        })
+
+        let endpoint = '/'
+        switch (user.privilege) {
+          case Privilege.Admin:
+            endpoint = '/admin'
+            break
+          case Privilege.User:
+            endpoint = '/user'
+            break
+          default:
+        }
+        interface MessageReponseInterface {
+          token: string
+          endpoint: string
+        }
+
+        return res.json(<APIResponse<MessageReponseInterface>>{
+          success: true,
+          data: {
+            token: jwt,
+            endpoint: endpoint,
+          }
+        })
+      })
+    } else if(googleSignInToken) {
+      const GOOGLE_CREDENTIAL = process.env.GOOGLE_CREDENTIAL
+
+      const client = new OAuth2Client(GOOGLE_CREDENTIAL);
+      const ticket = await client.verifyIdToken({
+        idToken: googleSignInToken,
+        audience: GOOGLE_CREDENTIAL, 
+      });
+
+      const payload = ticket.getPayload();
+
+      if(email != payload?.email!) {
+        res.json(accountNotFound)
         return
       }
 
@@ -62,7 +113,7 @@ export default async function AuthController(req: Request, res: Response) {
           endpoint: endpoint,
         }
       })
-    })
+    }
   } catch (err) {
     return res.json(<APIResponse>{
       success: false,
