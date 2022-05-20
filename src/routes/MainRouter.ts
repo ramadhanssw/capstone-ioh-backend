@@ -11,7 +11,7 @@ const MainRouter = Router()
 const upload = multer()
 
 MainRouter.post('/me', Authentication, upload.single('photo'), UpdateUserData)
-MainRouter.post('/register', SubmitUser)
+MainRouter.post('/sign-up', SubmitUser)
 
 MainRouter.get('/user/photo/:id', Authentication, UserPhoto)
 

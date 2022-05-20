@@ -44,7 +44,7 @@ app.use((req, res, next) => {
   next()
 })
 
-app.post('/auth', AuthController)
+app.post('/sign-in', AuthController)
 
 app.use('/admin', Authentication, IsAdmin, AdminRouter)
 app.use('/user', Authentication, UserRouter)

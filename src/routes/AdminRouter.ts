@@ -6,11 +6,15 @@ import {
   SubmitAdmin,
   UserData
 } from '../actions/main/User'
+import { CollectionPointRouter } from './main/CollectionPointRouter'
+import { TrashReportRouter } from './main/TrashReportRouter'
 import { UserRouter } from './main/UserRouter'
 
 const AdminRouter = Router()
 
 AdminRouter.use('/user', UserRouter)
+AdminRouter.use('/trash-report', TrashReportRouter)
+AdminRouter.use('/collection-point', CollectionPointRouter)
 
 AdminRouter.post('/administrator/:id', SubmitAdmin)
 AdminRouter.post('/administrator', SubmitAdmin)
