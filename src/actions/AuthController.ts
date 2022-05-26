@@ -10,7 +10,7 @@ import { APIResponse } from '../interfaces/response'
 import { env } from 'process'
 
 export default async function AuthController(req: Request, res: Response) {
-  const { email, password, googleSignInToken } = req.body as Record<string, string>
+  const { email, password, googleToken } = req.body as Record<string, string>
 
   const firestore = firebase.firestore()
 
@@ -71,13 +71,15 @@ export default async function AuthController(req: Request, res: Response) {
           }
         })
       })
-    } else if(googleSignInToken) {
-      const GOOGLE_CREDENTIAL = process.env.GOOGLE_CREDENTIAL
+    } else if(googleToken) {
+      const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID
+      console.log("GOOGLE_CLIENT_ID")
+      console.log(GOOGLE_CLIENT_ID)
 
-      const client = new OAuth2Client(GOOGLE_CREDENTIAL);
+      const client = new OAuth2Client(GOOGLE_CLIENT_ID);
       const ticket = await client.verifyIdToken({
-        idToken: googleSignInToken,
-        audience: GOOGLE_CREDENTIAL, 
+        idToken: googleToken,
+        audience: GOOGLE_CLIENT_ID, 
       });
 
       const payload = ticket.getPayload();
