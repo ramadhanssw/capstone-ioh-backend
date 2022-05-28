@@ -28,7 +28,7 @@ export default async function AuthController(req: Request, res: Response) {
     const userResult = await firestore.collection('users').where('email', '==', email).get()
 
     if (userResult.docs.length == 0) {
-      res.json(accountMissmatch)
+      res.json(accountNotFound)
       return
     }
 
@@ -73,8 +73,6 @@ export default async function AuthController(req: Request, res: Response) {
       })
     } else if(googleToken) {
       const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID
-      console.log("GOOGLE_CLIENT_ID")
-      console.log(GOOGLE_CLIENT_ID)
 
       const client = new OAuth2Client(GOOGLE_CLIENT_ID);
       const ticket = await client.verifyIdToken({

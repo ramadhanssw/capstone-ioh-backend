@@ -16,7 +16,6 @@ export interface TrashData {
   title: string
   category: TrashCategory
   quantity: number
-  //photos: Array<string>
   photo: string
   createdAt: Date
 }
