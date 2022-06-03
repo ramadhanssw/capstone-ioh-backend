@@ -62,7 +62,7 @@ export function UpdateUserData(req: Request, res: Response): void {
 
       firestore.collection('users').doc(id).update({
         ...userData
-      }).then(()=>{
+      }).then(() => {
         res.json(<APIResponse<{ user: UserInterface }>>{
           success: true,
           message: 'Ok'
@@ -72,7 +72,7 @@ export function UpdateUserData(req: Request, res: Response): void {
     } else {
       firestore.collection('users').doc(id).update({
         ...userData
-      }).then(()=>{
+      }).then(() => {
         res.json(<APIResponse<{ user: UserInterface }>>{
           success: true,
           message: 'Ok'
@@ -162,16 +162,17 @@ export async function SubmitUser(req: Request, res: Response): Promise<void> {
     fullname,
     email,
     password,
+    phone,
     status
   } = req.body
-  
+
   try {
     let foundUser: UserInterface | null = null
 
-    if(id) {
+    if (id) {
       const userResult = await firestore.collection('users').doc(id).get()
 
-      if(userResult.exists) {
+      if (userResult.exists) {
         foundUser = {
           id: userResult.id,
           ...userResult.data()
@@ -183,10 +184,13 @@ export async function SubmitUser(req: Request, res: Response): Promise<void> {
       fullname: '',
       email: '',
       password: '',
+      meta: {
+
+      },
       privilege: Privilege.User,
       createdAt: new Date(),
       updatedAt: new Date(),
-      status: UserStatus.Active
+      status: UserStatus.Active,
     } as UserInterface
 
     if (password && password.length > 4) {
@@ -195,11 +199,14 @@ export async function SubmitUser(req: Request, res: Response): Promise<void> {
 
     user.email = email
     user.fullname = fullname
-
     user.status = status
     user.privilege = Privilege.User
 
-    if(foundUser) {
+    if (phone) {
+      user.meta.phone = phone
+    }
+
+    if (foundUser) {
       await firestore.collection('users').doc(id).update(user)
     } else {
       await firestore.collection('users').add(user)
@@ -248,8 +255,8 @@ export function RemoveUser(req: Request, res: Response): void {
 export function UserList(req: Request, res: Response): void {
   firestore.collection('users').get().then(usersResult => {
     const users: Array<UserInterface> = []
-    
-    usersResult.docs.map((user)=>users.push({
+
+    usersResult.docs.map((user) => users.push({
       id: user.id,
       ...user.data(),
     } as UserInterface))
@@ -275,7 +282,7 @@ export async function SubmitAdmin(req: Request, res: Response): Promise<void> {
   let state = 'update'
 
   try {
-    let admin: UserInterface | null= {
+    let admin: UserInterface | null = {
       id: '',
       fullname: '',
       email: '',
@@ -286,7 +293,7 @@ export async function SubmitAdmin(req: Request, res: Response): Promise<void> {
       status: UserStatus.Active
     } as UserInterface
 
-    if(id) {
+    if (id) {
       let adminResult = await firestore.collection('users').doc(id).get()
 
       if (!adminResult.exists) {
@@ -354,13 +361,13 @@ export function RemoveAdmin(req: Request, res: Response): void {
 export function AdminData(req: Request, res: Response): void {
   const { id } = req.params
 
-  firestore.collection('users').doc(id).get().then((adminResult)=>{
-    if(!adminResult.exists) {
+  firestore.collection('users').doc(id).get().then((adminResult) => {
+    if (!adminResult.exists) {
       res.json(<APIResponse>{
         success: false,
         message: 'Admin data not found',
       })
-      return 
+      return
     }
 
     res.json(<APIResponse<{ administrator: UserInterface }>>{
@@ -373,7 +380,7 @@ export function AdminData(req: Request, res: Response): void {
       }
     })
     return
-  }).catch((err)=>{
+  }).catch((err) => {
     res.json(<APIResponse>{
       success: false,
       message: 'Database error',
@@ -384,9 +391,9 @@ export function AdminData(req: Request, res: Response): void {
 
 export function AdminList(req: Request, res: Response): void {
   firestore.collection('users').where('privilege', '==', Privilege.Admin).get().then(adminsResult => {
-    let admins: Array<UserInterface> = [] 
+    let admins: Array<UserInterface> = []
 
-    adminsResult.docs.map((adminResult)=>{
+    adminsResult.docs.map((adminResult) => {
       admins.push({
         id: adminResult.id,
         ...adminResult.data()
@@ -412,7 +419,7 @@ export async function UpdateFCMToken(req: Request, res: Response): Promise<void>
   const { id } = req.params
   const { fcmToken } = req.body
 
-  try { 
+  try {
     const userResult = await firestore.collection('users').doc(id).get()
     if (!userResult.exists) {
       res.json(<APIResponse>{
@@ -428,7 +435,7 @@ export async function UpdateFCMToken(req: Request, res: Response): Promise<void>
       id: userResult.id,
       ...userResult.data()
     } as UserInterface
-    
+
     user.meta = {
       ...user.meta,
       fcmToken: fcmToken
