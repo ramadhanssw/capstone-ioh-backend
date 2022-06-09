@@ -20,7 +20,7 @@ export interface TrashData {
   createdAt: Date
 }
 
-export default interface TrashReportInterface extends Document {
+export default interface TrashReportInterface {
   id: string
   user: string
   title: string

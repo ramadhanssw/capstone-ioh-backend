@@ -88,7 +88,7 @@ export async function SubmitTrashReport(req: Request, res: Response): Promise<vo
     if (trashList) {
       const parsedTrashList = JSON.parse(trashList) as Array<TrashData>
       const newTrashList: Array<TrashData> = []
-      
+
       await Promise.all(parsedTrashList.map(async (trash, index) => {
         if (photos[index] !== undefined) {
           const fileName = `trash-${Date.now()}-${sanitize(photos[index].originalname)}`
@@ -170,7 +170,7 @@ export async function TrashReportList(req: Request, res: Response) {
   const { user } = res.locals
 
   try {
-    const trashReportsResult = user.privilege == Privilege.Admin ? await firestore.collection('trashReports').get() : await firestore.collection('trashReports').where('user', '==', user.id).get()
+    const trashReportsResult = user.privilege == Privilege.Admin ? await firestore.collection('trashReports').get() : await firestore.collection('trashReports').where('user', '==', user.id).orderBy('createdAt', 'desc').limit(5).get()
     const trashReports: Array<TrashReportInterface> = []
 
     trashReportsResult.docs.map((trashReport) => trashReports.push({
@@ -185,7 +185,7 @@ export async function TrashReportList(req: Request, res: Response) {
       }
     })
     return
-  } catch(err) {
+  } catch (err) {
     res.json(<APIResponse>{
       success: false,
       message: 'Database error',

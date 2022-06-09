@@ -16,7 +16,7 @@ export enum Gender {
   Woman = 'woman'
 }
 
-export default interface UserInterface extends Document {
+export default interface UserInterface {
   id: string
   fullname: string
   email: string
@@ -31,6 +31,7 @@ export default interface UserInterface extends Document {
     fcmToken?: string
     fcmTopic?: string
   }
+  points: number,
   privilege: Privilege
   updatedAt: Date
   createdAt: Date
