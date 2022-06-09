@@ -313,12 +313,12 @@ export async function SubmitAdmin(req: Request, res: Response): Promise<void> {
     admin!.email = email
     admin!.status = status
 
-    const savedAdmin = await admin.save()
+    //const savedAdmin = await admin.save()
 
     res.json(<APIResponse<{ administrator: UserInterface }>>{
       success: true,
       data: {
-        administrator: savedAdmin
+        //administrator: savedAdmin
       }
     })
   } catch (err) {
@@ -441,7 +441,7 @@ export async function UpdateFCMToken(req: Request, res: Response): Promise<void>
       fcmToken: fcmToken
     }
 
-    await user.save()
+    //await user.save()
 
     res.json(<APIResponse>{
       success: true,
