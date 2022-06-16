@@ -1,6 +1,7 @@
 import dotenv from 'dotenv'
 import { Request, Response, Router } from 'express'
 import multer from 'multer'
+import { UpdateTrashReportStatus } from '../actions/main/TrashReport'
 import { SubmitUser, UpdateUserData, UserPhoto } from '../actions/main/User'
 import { firestore } from '../app'
 import TrashReportInterface, { TrashReportStatus } from '../interfaces/documents/TrashReportInterface'
@@ -15,6 +16,7 @@ const upload = multer()
 
 MainRouter.post('/me', Authentication, upload.single('photo'), UpdateUserData)
 MainRouter.post('/sign-up', SubmitUser)
+MainRouter.post('/:id/status', UpdateTrashReportStatus)
 
 MainRouter.get('/user/photo/:id', Authentication, UserPhoto)
 
