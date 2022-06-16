@@ -7,7 +7,7 @@ import TrashReportInterface, {
   TrashData,
   TrashReportStatus
 } from "../../interfaces/documents/TrashReportInterface"
-import { Privilege } from "../../interfaces/documents/UserInterface"
+import UserInterface, { Privilege } from "../../interfaces/documents/UserInterface"
 import { APIResponse } from "../../interfaces/response"
 import { StorageProvider, StoreFile } from '../../modules/Storage'
 
@@ -215,9 +215,27 @@ export async function UpdateTrashReportStatus(req: Request, res: Response): Prom
       return
     }
 
-    res.json(<APIResponse>{
+    const trashReport = {
+      ...trashReportResult.data(),
+      id: trashReportResult.id
+    } as TrashReportInterface
+
+    const userResult =  await firestore.collection('users').doc(trashReport.user).get()
+    const user = {
+      ...userResult.data(),
+      id: userResult.id
+    }
+
+    res.json(<APIResponse<{
+      user: UserInterface,
+      trashReport: TrashReportInterface
+    }>>{
       success: true,
-      message: 'Ok'
+      message: 'Ok',
+      data: {
+        user: user,
+        trashReport: trashReport
+      }
     })
   } catch (err) {
     res.json(<APIResponse>{

@@ -1,4 +1,4 @@
-export interface APIResponse<T = string> {
+export interface APIResponse<T = any> {
   success: boolean
   data?: T
   message?: string
