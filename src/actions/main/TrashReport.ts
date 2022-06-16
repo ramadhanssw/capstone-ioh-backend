@@ -220,6 +220,17 @@ export async function UpdateTrashReportStatus(req: Request, res: Response): Prom
       id: trashReportResult.id
     } as TrashReportInterface
 
+
+    if(trashReport.status === TrashReportStatus.Completed) {
+      res.json(<APIResponse>{
+        success: false,
+        message: 'TrashReport not found',
+        error: null
+      })
+
+      return
+    }
+
     const userResult =  await firestore.collection('users').doc(trashReport.user).get()
     const user = {
       ...userResult.data(),
@@ -237,6 +248,7 @@ export async function UpdateTrashReportStatus(req: Request, res: Response): Prom
         trashReport: trashReport
       }
     })
+    return
   } catch (err) {
     res.json(<APIResponse>{
       success: false,

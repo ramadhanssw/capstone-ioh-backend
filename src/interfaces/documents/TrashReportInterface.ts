@@ -1,4 +1,3 @@
-import { Document } from "mongoose"
 
 export enum TrashReportStatus {
   InProgress = 'inprogress',
