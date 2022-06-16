@@ -16,7 +16,7 @@ const upload = multer()
 
 MainRouter.post('/me', Authentication, upload.single('photo'), UpdateUserData)
 MainRouter.post('/sign-up', SubmitUser)
-MainRouter.post('/:id/status', UpdateTrashReportStatus)
+MainRouter.post('/trash-report/:id/status', UpdateTrashReportStatus)
 
 MainRouter.get('/user/photo/:id', Authentication, UserPhoto)
 
